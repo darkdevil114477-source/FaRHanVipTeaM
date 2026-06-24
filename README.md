@@ -1,2 +1,0 @@
-# FaRHanVipTeaM
-FaRHaN 
