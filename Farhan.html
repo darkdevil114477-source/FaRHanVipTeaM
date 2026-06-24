@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><title>FARHAN VIP TEAM</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+/* Login Overlay */
+#login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: flex; flex-direction: column; align-items: center; padding-top: 50px; }
+.box { width: 85%; max-width: 350px; height: 75px; border-radius: 20px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; font-family: 'Orbitron'; font-weight: bold; border: 2px solid; }
+.vip-box { border: 3px solid #ff0000; box-shadow: 0 0 25px #ff0000; color: #ff0000; font-size: 20px; text-transform: uppercase; margin-bottom: 25px; }
+.join-box { border: 2px solid #00ff00; box-shadow: 0 0 15px #00ff00; color: #00ff00; cursor: pointer; font-size: 18px; margin-bottom: 30px; }
+#login-overlay input { background: #111; border: 2px solid #ff0000; color: #fff; padding: 15px; border-radius: 15px; margin-bottom: 20px; width: 80%; max-width: 300px; text-align: center; font-size: 16px; outline: none; }
+#login-overlay button { background: #fff; color: #000; border: none; padding: 15px 60px; border-radius: 15px; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; font-size: 18px; }
+
+/* Dashboard Styles */
+html,body{height:100%;width:100%;background:#000;margin:0;padding:0;font-family:'Rajdhani',sans-serif;color:#ffd700;overflow:hidden;}
+#app{height:100%;display:none;}
+.custom-header { width: 100%; padding: 15px 0; text-align: center; background: #0a0515; border-bottom: 2px solid #333; }
+.main-name { font-family: 'Orbitron'; font-size: 20px; color: #00eaff; text-shadow: 0 0 10px #00eaff; text-transform: uppercase; margin: 0; }
+.wp-num { font-family: 'Rajdhani'; font-size: 14px; color: #fff; margin-top: 2px; }
+
+.r-btn { font-size: 12px; background: #330000; color: #ff0000; border: 1px solid #ff0000; padding: 5px 15px; border-radius: 5px; cursor: pointer; }
+.abox{display:flex;flex-direction:column;height:calc(100% - 130px);padding:15px;max-width:400px;margin:0 auto;}
+.tabs{display:flex;gap:10px;margin-bottom:15px;}
+.tab{flex:1;padding:12px;background:#110022;border:1px solid #5500aa;color:#d699ff;border-radius:6px;text-align:center;font-family:'Orbitron';font-size:12px;cursor:pointer;}
+.tab.active{background:linear-gradient(135deg,#bd00ff,#00eaff);color:#fff;border:none;box-shadow:0 0 25px #bd00ff;font-weight:bold;}
+.card{background:rgba(10,5,20,0.95);border:2px solid #ffd700;border-radius:15px;padding:20px;text-align:center;box-shadow:0 0 30px rgba(255,215,0,0.15);margin-bottom:15px;}
+.timer{font-size:55px;font-weight:900;color:#fff;font-family:'Orbitron';}
+.period{color:#00eaff;font-size:13px;font-family:'Orbitron';margin-bottom:5px;}
+.ptxt{font-size:50px;font-weight:900;font-family:'Orbitron';margin:5px 0;text-transform:uppercase;color:#00eaff;}
+.hbox{flex-grow:1;background:#000;border:1px solid #330044;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;}
+.hhead{display:flex;background:#1a0522;padding:10px;color:#ffd700;font-family:'Orbitron';font-size:10px;font-weight:bold;border-bottom:1px solid #bd00ff;}
+.hbody{overflow-y:auto;flex:1;}
+.row{display:flex;padding:10px;border-bottom:1px solid #220033;font-size:11px;align-items:center;}
+.col{flex:1;text-align:center;color:#ccc;}
+.win{color:#0f0;font-weight:bold;}
+.loss{color:#f05;font-weight:bold;}
+</style>
+</head>
+<body>
+
+  <div id="login-overlay">
+      <div class="box vip-box">FARHAN VIP TEAM</div>
+      <div class="box join-box" onclick="window.open('https://whatsapp.com/channel/0029VbAydkC42DcYD0Axzr3Q', '_blank')">JOIN CHANNEL</div>
+      <input type="password" id="pass" placeholder="Enter Password">
+      <button onclick="checkPass()">START</button>
+  </div>
+
+  <div id="app">
+    <div class="custom-header">
+      <h1 class="main-name">FARHAN TRADER</h1>
+      <div class="wp-num">WhatsApp: 03293036312</div>
+    </div>
+
+    <div class="abox">
+      <div style="text-align: right;"><button class="r-btn" onclick="clr()">CLEAN</button></div>
+      <div class="tabs">
+        <div id="t30" class="tab active" onclick="setMode('30S')">WinGo 30S</div>
+        <div id="t60" class="tab" onclick="setMode('1M')">WinGo 1M</div>
+      </div>
+      <div class="card">
+        <div id="pid" class="period">SYNCING...</div>
+        <div id="tmr" class="timer">00:00</div>
+        <div id="pbx" class="ptxt">--</div>
+      </div>
+      <div class="hbox">
+        <div class="hhead"><div class="col">PERIOD</div><div class="col">PRED</div><div class="col">RES</div><div class="col">STATUS</div></div>
+        <div class="hbody" id="hl"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+function checkPass(){
+    if(document.getElementById('pass').value === "Farhan786"){
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+    } else { alert("Wrong Password!"); }
+}
+
+let dataStore = { '30S': { history: "", lastP: "", lastR: "" }, '1M': { history: "", lastP: "", lastR: "" } };
+let currentMode = '30S';
+
+function setMode(m){ 
+    currentMode = m; 
+    document.getElementById('t30').className = (m === '30S') ? 'tab active' : 'tab';
+    document.getElementById('t60').className = (m === '1M') ? 'tab active' : 'tab';
+    document.getElementById('hl').innerHTML = dataStore[m].history;
+    _sy();
+}
+
+async function _sy(){
+    try{
+        const url = (currentMode === '30S') ? 'https://draw.ar-lottery01.com/WinGo/WinGo_30S/GetHistoryIssuePage.json' : 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json';
+        const r = await fetch(url + "?t=" + Date.now());
+        const d = await r.json();
+        const latest = d.data.list[0];
+        // پیریڈ نمبر کو ایک نمبر آگے بڑھا دیا گیا ہے
+        const currentP = (BigInt(latest.issueNumber) + 1n).toString();
+        
+        if(dataStore[currentMode].lastP !== "" && dataStore[currentMode].lastP !== currentP){
+            const finished = d.data.list[0]; // تازہ ترین ختم شدہ پیریڈ
+            const res = (parseInt(finished.number) >= 5) ? 'BIG' : 'SMALL';
+            const status = (dataStore[currentMode].lastR === res) ? '<span class="win">WIN</span>' : '<span class="loss">LOSS</span>';
+            
+            const row = `<div class="row"><div class="col">${dataStore[currentMode].lastP}</div><div class="col">${dataStore[currentMode].lastR}</div><div class="col">${res}</div><div class="col">${status}</div></div>`;
+            dataStore[currentMode].history = row + dataStore[currentMode].history;
+            document.getElementById('hl').innerHTML = dataStore[currentMode].history;
+            if(dataStore[currentMode].lastR === res) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        }
+        
+        dataStore[currentMode].lastP = currentP;
+        const nextPred = (parseInt(latest.number) % 2 === 0) ? 'BIG' : 'SMALL';
+        dataStore[currentMode].lastR = nextPred;
+        
+        document.getElementById('pid').innerText = "PERIOD: " + currentP;
+        document.getElementById('pbx').innerText = nextPred;
+    }catch(e){}
+}
+
+function clr(){ dataStore['30S'].history = ""; dataStore['1M'].history = ""; document.getElementById('hl').innerHTML = ""; }
+
+setInterval(()=>{
+    const interval = (currentMode === '30S' ? 30 : 60);
+    const s = interval - (new Date().getSeconds() % interval);
+    document.getElementById('tmr').innerText = "00:" + (s < 10 ? "0"+s : s);
+    if(s === 1) setTimeout(_sy, 1500);
+}, 1000);
+_sy();
+</script>
+</body>
+</html>
